@@ -34,7 +34,7 @@ async function init_ethers() {
   let addr = getUrlParameter('addr')
 
   //resolve ENS domain if possible
-  if(typeof addr !== "undefined" && addr.includes('.eth')) 
+  if(typeof addr !== "undefined" && addr.includes('.eth'))
   {
     addr = await App.provider.resolveName(addr)
     if(addr == null)
@@ -91,6 +91,10 @@ const toFixed = function(num, fixed) {
   } else {
     return '0'
   }
+}
+
+const bigIntPercent = function(num1, num2) {
+  return Number(num1*1000000n/num2)/1000000*100;
 }
 
 const decimalsForSmallNumber = function(num) {

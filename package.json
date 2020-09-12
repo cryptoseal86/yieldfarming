@@ -24,7 +24,8 @@
     "prepend-banner": "babel-node build-tools/prepend-banner.js",
     "rmprod": "rimraf filename-map.json && rimraf dist",
     "prettier": "prettier --write 'src/**/*.{js,css,scss,json,html}'",
-    "deploy": "gh-pages -d dist"
+    "deploy": "gh-pages -d dist",
+    "heroku": "npm run build && node ./server"
   },
   "author": "Jongseung Lim",
   "license": "MIT",

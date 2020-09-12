@@ -9,7 +9,6 @@ import $ from "jquery";
 import { ethers } from "ethers";
 
 //import dompurify from 'dompurify'
-
 import 'picturefill'
 import 'utils/errors'
 import 'utils/validation'
