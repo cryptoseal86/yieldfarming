@@ -56,10 +56,12 @@ async function main() {
         const ethPrice = (BigInt(poolsData[poolNames[i]].exchangeData._reserve0)/e8)/(BigInt(poolsData[poolNames[i]].exchangeData._reserve1)/e18);
         const lockedFunds = (BigInt(poolsData[poolNames[i]].exchangeData._reserve0)/e8) + ((BigInt(poolsData[poolNames[i]].exchangeData._reserve1)/e18) * ethPrice);
         sharePrice = Number(lockedFunds) / Number(poolsData[poolNames[i]].supply / e8);
+        console.log(lockedFunds, poolsData[poolNames[i]].exchangeData, ethPrice, sharePrice)
       } else {
         const lptPrice = (BigInt(poolsData[poolNames[i]].exchangeData._reserve0)/BigInt(poolsData[poolNames[i]].exchangeData._reserve1));
         const lockedFunds = (BigInt(poolsData[poolNames[i]].exchangeData._reserve0)/e8) + ((BigInt(poolsData[poolNames[i]].exchangeData._reserve1)/e8) * lptPrice);
         sharePrice =  Number(lockedFunds) / Number(poolsData[poolNames[i]].supply / e8);
+        console.log(lockedFunds, poolsData[poolNames[i]].exchangeData, lptPrice, sharePrice)
       }
       const yearlyRewardsInDollar = rewardInDollarsPerWeek * 52;
       _print(`${poolNames[i].toUpperCase()}: ${toFixed(yearlyRewardsInDollar/sharePrice*100, 2)}%`)
@@ -67,16 +69,17 @@ async function main() {
 
     _print("")
     _print("========== LIQUIDITY =========");
+    _print(`Your pools'shares:`);
     for (let i = 0; i < poolNames.length; i++) {
-      const exlusiveSupply = (poolsData[poolNames[i]].supply - poolsData[poolNames[i]].teamBalance) / e8;
-
-      let totalPoolShare = bigIntPercent(poolsData[poolNames[i]].userBalance, poolsData[poolNames[i]].supply);
-      let usersPoolShare = bigIntPercent(poolsData[poolNames[i]].userBalance, exlusiveSupply);
-
-      _print(`${poolNames[i].toUpperCase()}:`);
-      _print(`Total pool liquidity: ${BigInt(poolsData[poolNames[i]].exchangeData._reserve0)/e8} LBT and ${BigInt(poolsData[poolNames[i]].exchangeData._reserve1)/e8} iDOL`);
-      _print(`Your pool share: ${toFixed(totalPoolShare, 4)}% (${toFixed(usersPoolShare, 4)}% excluding liquidity provided by team)`);
-      _print("");
+      const poolShare = bigIntPercent(poolsData[poolNames[i]].userBalance, poolsData[poolNames[i]].supply);
+      poolShare !== 0 ? _print(`${poolNames[i]}: ${toFixed(poolShare, 4)}%`) : null;
+    }
+    _print("");
+    _print(`Your pools'shares(excluding lien team):`);
+    for (let i = 0; i < poolNames.length; i++) {
+      const exlusiveSupply = poolsData[poolNames[i]].supply - poolsData[poolNames[i]].teamBalance;
+      const poolShare = bigIntPercent(poolsData[poolNames[i]].userBalance, exlusiveSupply);
+      poolShare !== 0 ? _print(`${poolNames[i].toUpperCase()}: ${toFixed(poolShare, 4)}%`) : null;
     }
 
     hideLoading();
